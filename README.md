@@ -1,8 +1,6 @@
 # Study Plan - Final Project to CS50 Web - by Murilo de Oliveira Silva
 
-[![Opaideia Project presentation]
-(https://i.imgur.com/mavxdcl.jpg)]
-(https://youtu.be/Udbt2wBsZm0 "Opaideia Project Apresentation")
+[<img src="https://i.imgur.com/mavxdcl.jpg" width="50%">](https://youtu.be/Udbt2wBsZm0 "Opaideia Project presentation")
 
 ## Distinctiveness and Complexity
 - My project is based on some principles of memorization that I learned in a book by Daniel J. Levetin called "The organized mind", where he details and explains the importance of revisions, categorization and the use of multiple meanings in learning for memorization . In reflecting on these principles, I decided to make an application that categorizes the studies and allows you to use several elements to improve and complement my studies and reviews. Thus, this project becomes different from all the others I did in this course, and it also becomes complex due to the number of models that were used, the need to handle files and even access the microphone through the browser and create an mp3 file and store it with the blob using javascript. It took me a few months to carry out this project because I am still a beginner, I had some headaches but it worked and I learned many new things.
