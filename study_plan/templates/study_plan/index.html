@@ -1,0 +1,190 @@
+
+{% extends "study_plan/layout.html" %}
+{% load static %}
+
+{% block head %}
+<link href="{% static 'study_plan/index.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block sciencesnav %}
+<div class="sciences_nav">
+    <script>
+        function over_science(element){
+            element.querySelector("#icon_science").style.transform = "scale3d(1.3,1.1,1) rotate(7deg) translateY(2px)"
+            element.querySelector("#title_science").style.color = "#000"
+        }
+        function out_science(element){
+            element.querySelector("#icon_science").style.transform = ""
+            element.querySelector("#title_science").style.color = "#fff"
+        }
+    </script>
+    <div class="sciences">
+        {% for science in sciences %}
+        <div onmouseover="over_science(this)" onmouseout="out_science(this)" onclick="get_subareas('{{ science.namejs }}')" class="science" id="{{ science.name }}">
+            <div id="icon_science" style="background-image: url('{{ science.icon.url }}');">
+            </div>
+            <h2 id="title_science">{{ science.name }}</h2>
+        </div>
+        {% endfor %}
+    </div>
+    <div class="subareas">
+
+    </div>
+    <div class="subtopics">
+        
+    </div>
+    <div id="btns_sciences">
+        <div id="btn_create_study_close" onclick="close_sciences_nav()">
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block body %}
+    {% if user.is_authenticated %}
+    <div class="content_body">
+        <div id="content_nav_left" onmouseover="open_cont_nav_left()" onmouseout="close_cont_nav_left()">
+            <div id="div_studys">
+                <div id="icon_studys">
+
+                </div>
+                <div id="content_studys">
+                   <p id="content_p">Studys</p> 
+                </div>
+            </div>
+            <div id="div_courses">
+                <div id="icon_courses">
+
+                </div>
+                <div id="content_courses">
+                   <p id="content_p">Courses</p> 
+                </div>
+            </div>
+            <div id="div_discussions">
+                <div id="icon_discussions">
+                    
+                </div>
+                <div id="content_discussions">
+                    <p id="content_p">Discussions</p>
+                </div>
+            </div>
+            <div id="div_problems_solutions">
+                <div id="icon_problems_solutions">
+
+                </div>
+                <div id="content_problems_solutions">
+                    <p id="content_p">Problems and solutions</p>
+                </div>
+            </div>
+            <div id="div_news_discoveries">
+                <div id="icon_news_discoveries">
+
+                </div>
+                <div id="content_news_discoveries">
+                    <p id="content_p">News and discoveries</p>
+                </div>
+            </div>
+            <div id="div_events">
+                <div id="icon_events">
+
+                </div>
+                <div id="content_events">
+                    <p id="content_p">Events</p>
+                </div>
+            </div>
+            <div id="div_awards">
+                <div id="icon_awards">
+
+                </div>
+                <div id="content_awards">
+                    <p id="content_p">Awards</p>
+                </div>
+            </div>
+        </div>
+        <div id="vertical_line"></div>
+        <div id="content_nav_right">
+
+        </div>
+    </div>
+        
+
+    {% else %}
+    <script type="text/javascript">
+        document.addEventListener("DOMContentLoaded", () => {
+            document.getElementById("form_image_div").querySelector("input").setAttribute("onchange","verifi_image(this)")
+        })
+        function open_register() {
+            document.querySelector('.block_login').style = "animation: fadeout 0.5s 1 !important;";
+            setTimeout(function() {
+                document.querySelector('.block_login').style = "display: none !important;";
+                document.querySelector('.block_register').style = "display: flex !important; animation:fadein 0.5s 1;";
+            }, 400)
+            const div_ins = document.querySelectorAll("#div_instructions");
+            div_ins.forEach((div)=>{
+                div.remove();
+            })
+        }
+        function open_login() {
+            document.querySelector('.block_register').style = "display: flex !important; animation: fadeout 0.5s 1 !important;";
+            setTimeout(function() {
+                document.querySelector('.block_register').style = "display: none !important;";
+                document.querySelector('.block_login').style = "display: flex !important; animation:fadein 0.5s 1;";
+            }, 400)
+        }
+    </script>
+        <div class="div_body_lr">
+            <div class="div_video_lr">
+                <video loop autoplay muted src="{% static 'study_plan/videos/anim_index.mp4' %}" ></video>
+            </div>
+            <div class="div_login_register">
+                <div class="block_login">
+                    <h2>Login</h2>
+                    {% if message_l %}
+                        <div style="font-size: small; margin-bottom: 1rem; color: rgba(191,36,31,1);" >{{ message_l }}</div>
+                    {% endif %}
+
+                    <form action="{% url 'login' %}" method="post">
+                        {% csrf_token %}
+                        <div class="form-group">                        
+                            <input autofocus class="form-control" type="text" name="username" placeholder="Username">
+                        </div>
+                        <div class="form-group">
+                            <input class="form-control" type="password" name="password" placeholder="Password">
+                        </div>
+                            <input style="width: 100%;" class="btn btn-primary" type="submit" value="Login">
+                    </form>
+
+                    <div id="div_solv">Don't have an account? <a onclick="open_register()">Register here.</a></div>
+                </div>
+                <div class="block_register">
+                    <h2>Register</h2>
+                    {% if message_r %}
+                        <script>open_register()</script>
+                        <div style="font-size: small; margin-bottom: 1rem; color: rgba(191,36,31,1);">{{ message_r }}</div>
+                    {% endif %}
+                    <form action="{% url 'register' %}" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <input id="username_register" autofocus onchange="verifi_username(this)" onfocus="input_instruct('Create a username with a minimum of 4 characters.', this)" onfocusout="clear_instruct(this)" class="form-control" autofocus type="text" name="username" placeholder="Username">
+                        </div>
+                        <div class="form-group">
+                            <input id="email_register" onchange="verifi_email(this)" onfocus="input_instruct('Enter a valid email.', this)" onfocusout="clear_instruct(this)" class="form-control" type="email" name="email" placeholder="Email Address">
+                        </div>
+                        <div class="form-group">
+                            <input id="pass1_register" class="form-control" onfocus="input_instruct('- At least 12 characters;<br>- A mixture of both uppercase and lowercase letters;<br>- A mixture of letters and numbers;<br>- Inclusion of at least one special character, e.g., ! @ # ? ].<br>', this)" onfocusout="clear_instruct(this)" type="password" name="password" placeholder="Password">
+                        </div>
+                        <div class="form-group">
+                            <input id="pass2_register" onchange="verifi_pass()" class="form-control" type="password" name="confirmation" placeholder="Confirm Password">
+                        </div>
+                        <div id="form_image_div" class="form-group">
+                            {{ form_image.user_image }}
+                            <label for="exampleFormControlFile1">Input your profile image (width 100px and heigth 100px).</label>
+                        </div>
+                        <input style="width: 100%;" class="btn btn-primary" type="submit" value="Register">
+                    </form>
+                    <div id="div_solv" >Already have an account? <a onclick="open_login()">Log In here.</a></div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}

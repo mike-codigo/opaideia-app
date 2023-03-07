@@ -1,0 +1,186 @@
+{% extends "study_plan/layout.html" %}
+{% load static %}
+
+{% block head %}
+<link href="{% static 'study_plan/index.css' %}" rel="stylesheet">
+<link href="{% static 'study_plan/create_study.css' %}" rel="stylesheet">
+<script type="text/javascript" src="http://js.nicedit.com/nicEdit-latest.js"></script>
+<script type="text/javascript" src="{% static 'study_plan/tinymce/tinymce.min.js' %}"></script>
+{% endblock %}
+
+
+{% block sciencesnav %}
+<div class="sciences_nav">
+    <script>
+        function over_science(element){
+            element.querySelector("#icon_science").style.transform = "scale3d(1.3,1.1,1) rotate(7deg) translateY(2px)"
+            element.querySelector("#title_science").style.color = "#000"
+        }
+        function out_science(element){
+            element.querySelector("#icon_science").style.transform = ""
+            element.querySelector("#title_science").style.color = "#fff"
+        }
+    </script>
+    <div class="sciences">
+        {% for science in sciences %}
+        <div onmouseover="over_science(this)" onmouseout="out_science(this)" onclick="get_subareas('{{ science.namejs }}')" class="science" id="{{ science.name }}">
+            <div id="icon_science" style="background-image: url('{{ science.icon.url }}');">
+            </div>
+            <h2 id="title_science">{{ science.name }}</h2>
+        </div>
+    {% endfor %}
+    </div>
+    <div class="subareas">
+
+    </div>
+    <div class="subtopics">
+        
+    </div>
+    <div id="btns_sciences">
+        <div id="btn_create_study_close" onclick="close_sciences_nav()">
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block body %}
+<script src="{% static 'study_plan/create_study.js' %}"></script>
+<script src="{% static 'study_plan/record.js' %}"></script>
+<script type="">
+    document.addEventListener("DOMContentLoaded", () => {
+        if ({{ topic_type }} == 1){
+            add_topic('subarea', '{{ topic_selected }}')
+        } else if({{ topic_type }} == 2){
+            add_topic('subtopic', '{{ topic_selected }}')
+        } else {
+
+        }
+    });
+</script>
+<div class="content_study">
+    <form id="form_create_study" action="" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div id="div_post_info">
+            <div id="btn_close_post_info" onclick="close_post_info()"></div>
+            <div id="nav_post_info">
+                <div id="div_set_post">
+                    <div id="div_post_type">
+                        <label for="post_type">Type of post:</label>
+                        <select name="post_type" id="post_type">
+                            <option value="public">Public</option>
+                            <option value="private">Private</option>
+                        </select>
+                    </div>
+                    <div id="div_credit_study">
+                        <label for="credit_study">Credit to post:</label>
+                        <select name="credit_study" id="credit_study" onchange="change_credit(this)">
+                            <option id="credit_by_me" value="by_me">By me</option>
+                            <option id="credit_other" value="other">Other</option>
+                        </select>
+                    </div>
+                    <input name="credit_name" id="credit_name" type="text" placeholder="Credit name" maxlength="50">
+                </div>
+                <textarea name="summary_study" id="summary_study" cols="30" rows="10" placeholder="Write a summary of your study..." maxlength="1500"></textarea>
+            </div>
+            <div id="bg_post_info"></div>
+        </div>
+        <div id="study_content">
+            <div id="study_nav_top">
+                <div id="study_att">
+                    <div id="nav_att_study">
+                        <!--<div id="btn_o_img_s" onclick="open_images_std()"></div>-->
+                        <div id="btn_o_pdf_s" onclick="open_pdfs_std()"></div>
+                    </div>
+                    <div id="study_att_content">
+                        <div id="nav_file_content">
+                            <div id="att_controls">
+                                <div id="pdf_controls">
+                                    <div id="navigation_controls">
+                                        <button data-pager="prev" type="button" id="go_previous">Previous</button>
+                                        <input data-pager="pg_num" id="current_page" value="1" type="number"/>
+                                        <h6 id="total_pages"></h6>
+                                        <button data-pager="next" type="button" id="go_next">Next</button>
+                                    </div>
+                                    <div id="zoom_controls">  
+                                        <button data-zoom="+" type="button" id="zoom_in">+</button>
+                                        <button data-zoom="-" type="button" id="zoom_out">-</button>
+                                    </div>
+                                </div>
+                                <div id="img_controls">
+        
+                                </div>
+                                <div onclick="close_att()" id="btn_close_att"></div>
+                            </div>
+                            <div id="files_content">
+                                <div id="images_content">
+        
+                                </div>
+                                <div id="pdf_content">
+                                    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.0.943/pdf.min.js"></script>
+                                    <div id="canvas_container">
+                                        <canvas id="pdf_renderer"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="study_notes">
+                    <div id="div_textarea">
+                        <textarea form="form_create_study" name="textarea_study" id="textarea_study" cols="50" autofocus></textarea>
+                    </div>
+                </div>
+            </div>
+            <div id="study_nav_bot">
+                <div id="nav_study_info">
+                    <div onclick="close_study_info()" id="btn_close_info"></div>
+                    <div onclick="open_study_info()" id="btn_open_info"></div>
+                </div>
+                <div id="nav_files_att">
+                    <button type="button" id="input_pdf_btn" onclick="open_input_pdf()">Input PDF</button>
+                    {{ form_pdf }}
+                    
+                    <div id="files_att">
+
+                    </div>
+                </div>
+                <div id="study_info">
+                    <div id="div_input_title">
+                            <h6>Title: </h6>
+                            <input type="text" name="title">
+                    </div>
+                    <div id="post_info">
+                        <div id="btn_post_info" onclick="open_post_info()"></div>
+                        <p>Post info</p>
+                    </div> 
+                    <div id="div_select_topic">
+                            <h6>Select topics: </h6>
+                            <div id="div_selected_opt">
+
+                            </div>
+                            <div id="btn_add_topic" onclick="open_sciences_nav()">+</div>
+                    </div>
+                    <select form="form_create_study" name="name_study_topics" id="select_topic" place-holder="Select topic" multiple size="5">
+
+                    </select>
+                    <div id="input_audio_f">
+                        <div id="btns_audio">
+                            <div id="btn_start_rec"></div>
+                            <div id="btn_stop_rec"></div>
+                        </div>
+                        <div class="div_controls">
+                            <p id="controls_subtitle">Record a audio teaching in <b>5 minutes.</b></p>
+                            <audio id="audioPlay" controls></audio>
+                        </div>
+                        {{ form_audio }}
+                        
+                    </div>
+                </div>
+                <div id="input_sbm">
+                    <input type="submit" value="Create Study">
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}

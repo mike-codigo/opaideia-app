@@ -1,0 +1,12 @@
+Python Libs:
+    django-multiselectfield
+    pillow
+
+JavaScript Libs:
+    pdfjsLib
+    tinymce
+
+Run this commands for install necessarie libs:
+
+    pip install django-multiselectfield
+    pip install Pillow
